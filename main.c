@@ -1,27 +1,37 @@
 /*
- * LCD Display.c
+ * AVR timer.c
  *
- * Created: 6/10/2026 12:17:00 PM
+ * Created: 6/9/2026 10:57:41 AM
  * Author : ASUS
  */ 
 #define F_CPU 16000000UL
-#include <util/delay.h>
 #include <avr/io.h>
-#include "LCD.h"
+#include <util/delay.h>
+
+void delay()
+{
+	TCCR0A&=~(1<<WGM00);
+	TCCR0A&=~(1<<WGM01);
+	TCCR0B&=~(1<<CS02);
+	TCCR0B&=~(1<<CS01);
+	TCCR0B |=(1<<CS00);
+	for(uint16_t i=0;i<62500;i++){
+	while(!(TIFR0 &(1<<TOV0)));
+	TIFR0 |=(1<<TOV0);
+	}
+}
+
+
 
 int main(void)
 {
-   lcd_init();
-    while (1) 
-    {
-		lcd_set_cursor(0,0);
-		lcd_print("AJIL!");
-		lcd_set_cursor(1,0);
-		float a=07;
-		lcd_print_float(a);
-		_delay_ms(5000);
-		lcd_clear();
-		_delay_ms(1000);
-    }
+	DDRB|=(1<<DDB5);
+	while (1)
+	{
+		PORTB|=(1<<PB5);
+		delay();
+		PORTB&=~(1<<PB5);
+		delay();
+	}
 }
 
