@@ -1,43 +1,27 @@
 /*
- * ADC.c
+ * LCD Display.c
  *
- * Created: 6/10/2026 3:05:55 PM
+ * Created: 6/10/2026 12:17:00 PM
  * Author : ASUS
  */ 
 #define F_CPU 16000000UL
-#include <avr/io.h>
 #include <util/delay.h>
+#include <avr/io.h>
 #include "LCD.h"
 
 int main(void)
-{ 
-	DDRD |=(1<<PC3);
-	
-	ADMUX|=(1<<REFS0);
-	ADMUX&=~(1<<REFS1);  //Set reference voltage to external 5v
-	
-	ADMUX&=~(1<<MUX3);
-	ADMUX&~(1<<MUX2);
-	ADMUX|=(1<<MUX1);  
-	ADMUX|=(1<<MUX0); 
-	
-	ADCSRA|=(1<<ADEN);
-	
-	ADCSRA |=(1<<ADSC);
-	
+{
+   lcd_init();
     while (1) 
-	{ 
-		ADCSRA |=(1<<ADSC);
-		while(ADCSRA & (1<<ADSC));
-		uint16_t adcread = ADC;
-		
-		
+    {
 		lcd_set_cursor(0,0);
-		lcd_print("ADC VALUE");
+		lcd_print("AJIL!");
 		lcd_set_cursor(1,0);
-		lcd_print_uint16(adcread);
+		float a=07;
+		lcd_print_float(a);
+		_delay_ms(5000);
+		lcd_clear();
 		_delay_ms(1000);
-		
     }
 }
 
